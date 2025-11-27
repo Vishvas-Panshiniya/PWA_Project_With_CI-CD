@@ -27,21 +27,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
 
-      # Smart cache for node_modules (rebuild only when lockfile changes)
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        id: node_cache
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            node-modules-
-
-      - name: Install dependencies
-        if: steps.node_cache.outputs.cache-hit != 'true'
-        run: npm ci
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: npm install
@@ -71,10 +59,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        if: steps.node_cache.outputs.cache-hit != 'true'
-        run: npm ci
 
       - name: Install dependencies
         run: npm install
