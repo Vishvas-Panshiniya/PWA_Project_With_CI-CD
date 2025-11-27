@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 # Prevent duplicate jobs during PR + push
 concurrency:
   group: ci-${{ github.ref }}
