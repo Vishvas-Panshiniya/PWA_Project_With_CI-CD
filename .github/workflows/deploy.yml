@@ -2,15 +2,14 @@ name: Deployment pipeline
 
 on:
   push:
-    branches:
-      - main
-    tags:
-      - "*"
+    branches: [main]
   pull_request:
-    branches:
-      - main
-    tags:
-      - "*"
+    branches: [main]
+
+# Prevent duplicate jobs during PR + push
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -21,33 +20,47 @@ jobs:
         node-version: [24.11.1]
 
     steps:
-      - name: Checkout
+      - name: Checkout Source
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: SetUp Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
+      # Smart cache for node_modules (rebuild only when lockfile changes)
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: node_cache
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-
+
       - name: Install dependencies
+        if: steps.node_cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Lint
-        run: npm run lint
+        run: npm run lint --if-present
 
       - name: Build
         run: npm run build
 
   deploy:
-    if: github.ref == 'refs/heads/main'
     needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     strategy:
       matrix:
         node-version: [24.11.1]
 
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,7 +73,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
+        if: steps.node_cache.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Build
         run: npm run build
