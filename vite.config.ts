@@ -10,6 +10,7 @@ export default defineConfig({
       },
     }),
   ],
+  base: "PWA_Project_With_CI-CD/",
   server: {
     port: 4200,
     host: "localhost",
