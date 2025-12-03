@@ -6,6 +6,34 @@ import "./App.css";
 function App() {
   const [count, setCount] = useState(0);
   const [posts, setPosts] = useState([]);
+  const [location, setLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [status, setStatus] = useState("");
+
+  const getLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        setStatus("filead :---" + error.message);
+      },
+      {
+        enableHighAccuracy: true, // use GPS if possible
+        maximumAge: 0, // don’t use cached location
+        timeout: 10000, // 10 seconds max
+      }
+    );
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +72,11 @@ function App() {
           <li key={post.id}>{post.title}</li>
         ))}
       </ul>
+
+      <p>Latitude: {location.latitude}</p>
+      <p>Longitude: {location.longitude}</p>
+      <p>{status}</p>
+      <button onClick={getLocation}>Get Location</button>
     </>
   );
 }
