@@ -25,7 +25,7 @@ function App() {
 
       navigator?.geolocation?.getCurrentPosition(
         (position) => {
-          setLocation({ ...position, timestamp: Date.now() });
+          setLocation(position);
         },
         (error) => {
           setStatus("failed location:---" + error.message);
@@ -105,7 +105,6 @@ function App() {
             <th style={cellStyle}>Altitude Accuracy</th>
             <th style={cellStyle}>Heading</th>
             <th style={cellStyle}>Speed</th>
-            <th style={cellStyle}>Timestamp</th>
           </tr>
         </thead>
         <tbody>
@@ -119,7 +118,6 @@ function App() {
             </td>
             <td style={cellStyle}>{location?.coords?.heading || "-"}</td>
             <td style={cellStyle}>{location?.coords?.speed || "-"}</td>
-            <td style={cellStyle}>{location?.timestamp || "-"}</td>
           </tr>
         </tbody>
       </table>
