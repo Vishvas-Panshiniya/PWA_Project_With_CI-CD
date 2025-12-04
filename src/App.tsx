@@ -97,7 +97,7 @@ function App() {
         }}
       >
         <thead>
-          <tr style={{ backgroundColor: "#f4f4f4" }}>
+          <tr style={{ backgroundColor: "#000000" }}>
             <th style={cellStyle}>Latitude</th>
             <th style={cellStyle}>Longitude</th>
             <th style={cellStyle}>Accuracy</th>
@@ -140,7 +140,7 @@ function App() {
         }}
       >
         <thead>
-          <tr style={{ backgroundColor: "#f4f4f4" }}>
+          <tr style={{ backgroundColor: "#000000" }}>
             <th style={cellStyle}>Locale</th>
             <th style={cellStyle}>Calendar</th>
             <th style={cellStyle}>Numbering System</th>
