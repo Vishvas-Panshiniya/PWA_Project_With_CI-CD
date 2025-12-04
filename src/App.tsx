@@ -36,7 +36,7 @@ function App() {
           timeout: 10000, // 10 seconds max
         }
       );
-    } catch (error: { message: string }) {
+    } catch (error: any) {
       setStatus("failed location catch :---" + error?.message);
     }
   };
@@ -45,7 +45,7 @@ function App() {
     try {
       const timezone = Intl.DateTimeFormat().resolvedOptions();
       setTimezone(timezone);
-    } catch (error: { message: string }) {
+    } catch (error: any) {
       setStatus("failed timezone :---" + error?.message);
     }
   };
